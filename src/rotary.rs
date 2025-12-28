@@ -51,8 +51,8 @@ impl RotaryEncoder {
     }
 
     pub fn poll(&mut self) -> Option<RotaryEvent> {
-        // Check for button press
-        if let Ok(Some(_)) = self.sw_pin.poll_interrupt(false, Some(Duration::from_millis(1))) {
+        // Check for button press with 10ms timeout to reduce CPU usage
+        if let Ok(Some(_)) = self.sw_pin.poll_interrupt(false, Some(Duration::from_millis(10))) {
             let now = Instant::now();
             
             if let Some(last_press) = self.last_button_press {

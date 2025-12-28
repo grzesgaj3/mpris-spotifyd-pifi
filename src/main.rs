@@ -45,18 +45,20 @@ fn main() -> Result<()> {
     ) {
         Ok(d) => {
             log::info!("Display initialized successfully");
-            d
+            Some(d)
         }
         Err(e) => {
-            log::error!("Failed to initialize display: {}", e);
-            log::warn!("Continuing without display...");
-            return Err(e);
+            log::warn!("Failed to initialize display: {}", e);
+            log::warn!("Continuing without display (logging mode only)...");
+            None
         }
     };
 
-    // Show startup message
-    display.show_message("MPRIS Spotifyd", "Initializing...")?;
-    thread::sleep(Duration::from_secs(2));
+    // Show startup message if display available
+    if let Some(ref mut disp) = display {
+        disp.show_message("MPRIS Spotifyd", "Initializing...")?;
+        thread::sleep(Duration::from_secs(2));
+    }
 
     // Initialize rotary encoder
     let mut encoder = match RotaryEncoder::new(
@@ -87,13 +89,17 @@ fn main() -> Result<()> {
                 Ok(_) => {
                     log::info!("Successfully connected to player");
                     connection_failed_count = 0;
-                    display.show_message("Connected to", "Spotify")?;
-                    thread::sleep(Duration::from_secs(1));
+                    if let Some(ref mut disp) = display {
+                        disp.show_message("Connected to", "Spotify")?;
+                        thread::sleep(Duration::from_secs(1));
+                    }
                 }
                 Err(e) => {
                     if connection_failed_count == 1 {
                         log::warn!("Waiting for MPRIS player: {}", e);
-                        display.show_message("Waiting for", "Spotify...")?;
+                        if let Some(ref mut disp) = display {
+                            disp.show_message("Waiting for", "Spotify...")?;
+                        }
                     }
                     connection_failed_count += 1;
                     thread::sleep(Duration::from_millis(config.mpris.reconnect_interval_ms));
@@ -113,12 +119,15 @@ fn main() -> Result<()> {
         match mpris_client.get_track_info() {
             Ok(track) => {
                 // Only update display if track info changed significantly
+                // Check for title/artist change or position change > 5 seconds
                 if track.title != last_track.title 
                     || track.artist != last_track.artist 
-                    || (track.position.as_secs() != last_track.position.as_secs()) {
+                    || track.position.as_secs().abs_diff(last_track.position.as_secs()) >= 5 {
                     
-                    if let Err(e) = display.render(&track) {
-                        log::error!("Failed to render display: {}", e);
+                    if let Some(ref mut disp) = display {
+                        if let Err(e) = disp.render(&track) {
+                            log::error!("Failed to render display: {}", e);
+                        }
                     }
                     last_track = track;
                 }
@@ -142,8 +151,10 @@ fn main() -> Result<()> {
                             ControlMode::Scroll => "Scroll Mode",
                         };
                         log::info!("Mode switched to: {:?}", mode);
-                        if let Err(e) = display.show_message("Mode:", mode_name) {
-                            log::error!("Failed to show mode message: {}", e);
+                        if let Some(ref mut disp) = display {
+                            if let Err(e) = disp.show_message("Mode:", mode_name) {
+                                log::error!("Failed to show mode message: {}", e);
+                            }
                         }
                         thread::sleep(Duration::from_millis(800));
                     }

@@ -17,9 +17,6 @@ linux-embedded-hal = "0.4"
 # GPIO and rotary encoder
 rppal = "0.18"
 
-# Async runtime
-tokio = { version = "1", features = ["full"] }
-
 # Error handling
 anyhow = "1.0"
 thiserror = "1.0"

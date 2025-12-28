@@ -1,5 +1,5 @@
 use anyhow::Result;
-use mpris::{PlayerFinder, Player, PlaybackStatus};
+use mpris::{PlayerFinder, Player};
 use std::time::Duration;
 
 /// Information about the currently playing track
@@ -9,8 +9,6 @@ pub struct TrackInfo {
     pub artist: String,
     pub position: Duration,
     pub length: Duration,
-    #[allow(dead_code)]
-    pub status: String,
 }
 
 impl TrackInfo {
@@ -64,7 +62,6 @@ impl MprisClient {
 
         let metadata = player.get_metadata()?;
         let position = player.get_position().unwrap_or(Duration::ZERO);
-        let status = player.get_playback_status().unwrap_or(PlaybackStatus::Stopped);
 
         Ok(TrackInfo {
             title: metadata.title().unwrap_or("Unknown").to_string(),
@@ -73,7 +70,6 @@ impl MprisClient {
                 .unwrap_or_else(|| "Unknown Artist".to_string()),
             position,
             length: metadata.length().unwrap_or(Duration::ZERO),
-            status: format!("{:?}", status),
         })
     }
 
