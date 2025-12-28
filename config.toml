@@ -1,0 +1,21 @@
+[display]
+# SPI device path for the SSD1306 display
+spi_device = "/dev/spidev0.0"
+# GPIO pin for DC (Data/Command) signal
+dc_pin = 24
+# GPIO pin for RST (Reset) signal
+rst_pin = 25
+# Display update interval in milliseconds
+update_interval_ms = 500
+
+[rotary]
+# GPIO pins for rotary encoder
+clk_pin = 17
+dt_pin = 27
+sw_pin = 22
+# Volume adjustment step (0.0 to 1.0)
+volume_step = 0.05
+
+[mpris]
+# Reconnection attempt interval in milliseconds
+reconnect_interval_ms = 5000

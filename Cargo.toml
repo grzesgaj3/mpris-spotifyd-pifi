@@ -1,0 +1,36 @@
+[package]
+name = "mpris-spotifyd-pifi"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# MPRIS D-Bus integration
+mpris = "2.0"
+
+# Embedded graphics and display drivers
+embedded-graphics = "0.8"
+ssd1306 = "0.8"
+
+# SPI support for Linux
+linux-embedded-hal = "0.4"
+
+# GPIO and rotary encoder
+rppal = "0.18"
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Logging
+log = "0.4"
+env_logger = "0.11"
+
+# Configuration
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.8"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+strip = true

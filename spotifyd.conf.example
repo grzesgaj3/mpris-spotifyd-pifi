@@ -1,0 +1,33 @@
+[global]
+# Your Spotify account credentials
+username = "YOUR_SPOTIFY_USERNAME"
+password = "YOUR_SPOTIFY_PASSWORD"
+
+# Audio backend - use ALSA for Raspberry Pi
+backend = "alsa"
+
+# Device name as it appears in Spotify Connect
+device_name = "PiFi Speaker"
+
+# Audio device (usually default for PiFi DAC+)
+# Uncomment and adjust if needed
+# device = "hw:0,0"
+
+# Audio quality
+bitrate = 320
+volume_normalisation = true
+normalisation_pregain = -10
+
+# Cache settings
+cache_path = "/home/pi/.cache/spotifyd"
+no_audio_cache = false
+
+# Device type
+device_type = "speaker"
+
+# Initial volume (0-100)
+initial_volume = "75"
+
+# Volume control
+volume_controller = "alsa"
+mixer = "PCM"
