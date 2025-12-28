@@ -9,6 +9,7 @@ pub struct TrackInfo {
     pub artist: String,
     pub position: Duration,
     pub length: Duration,
+    #[allow(dead_code)]
     pub status: String,
 }
 

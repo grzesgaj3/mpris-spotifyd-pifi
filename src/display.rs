@@ -1,10 +1,3 @@
-use embedded_graphics::{
-    mono_font::{ascii::FONT_6X10, MonoTextStyleBuilder},
-    pixelcolor::BinaryColor,
-    prelude::*,
-    primitives::{PrimitiveStyle, Rectangle},
-    text::{Baseline, Text},
-};
 use anyhow::Result;
 use crate::mpris_client::TrackInfo;
 
@@ -46,6 +39,7 @@ impl Display {
         }
     }
 
+    #[allow(dead_code)]
     pub fn clear(&mut self) -> Result<()> {
         log::debug!("Display cleared");
         Ok(())
